@@ -6,6 +6,7 @@ describe('POST /api/contacts/{id}/addresses', () => {
   beforeEach(async () => {
     await AddressTest.deleteAll();
     await ContactTest.deleteAll();
+    await UserTest.delete();
     await UserTest.create();
     await ContactTest.create();
   });
@@ -80,5 +81,61 @@ describe('POST /api/contacts/{id}/addresses', () => {
     expect(body.data.province).toBe("Provinsi");
     expect(body.data.country).toBe("Indonesia");
     expect(body.data.postal_code).toBe("21133");
+  })
+})
+
+describe('GET /api/contacts/{id}/addresses/{addresses_id}', () => {
+  beforeEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+
+    await UserTest.create();
+    await ContactTest.create();
+    await AddressTest.create();
+  });
+  
+  afterEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+  });
+
+  it('should rejected if address is not found', async () => {
+    const contact = await ContactTest.get();
+    const address = await AddressTest.get();
+    const response = await app.request("/api/contacts/" + contact.id + '/addresses/' + (address.id + 1), {
+      method: "get",
+      headers: {
+        Authorization: "test",
+      },
+    });
+
+    expect(response.status).toBe(404);
+
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  })
+
+  it('should success if address is exits', async () => {
+    const contact = await ContactTest.get();
+    const address = await AddressTest.get();
+    const response = await app.request("/api/contacts/" + contact.id + '/addresses/' + address.id, {
+      method: "get",
+      headers: {
+        Authorization: "test",
+      },
+    });
+
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(body.data).toBeDefined();
+    expect(body.data.id).toBeDefined();
+    expect(body.data.street).toBe(address.street);
+    expect(body.data.city).toBe(address.city);
+    expect(body.data.province).toBe(address.province);
+    expect(body.data.country).toBe(address.country);
+    expect(body.data.postal_code).toBe(address.postal_code);
   })
 })
