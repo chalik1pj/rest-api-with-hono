@@ -139,3 +139,33 @@ describe('GET /api/contacts/{id}/addresses/{addresses_id}', () => {
     expect(body.data.postal_code).toBe(address.postal_code);
   })
 })
+
+describe('PUT /api/contacts/{id}/addresses/{addresses_id}', () => {
+  beforeEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+
+    await UserTest.create();
+    await ContactTest.create();
+    await AddressTest.create();
+  });
+  
+  afterEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+  });
+
+  it('should rejected if request is invalid', async () => {
+    
+  })
+  
+  it('should rejected if request is not found', async () => {
+
+  })
+
+  it('should success if request is valid', async () => {
+
+  })
+})
