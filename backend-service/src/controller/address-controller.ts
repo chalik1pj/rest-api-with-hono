@@ -35,7 +35,7 @@ addressController.get('/api/contacts/:contact_id/addresses/:address_id', async (
 addressController.put('/api/contacts/:contact_id/addresses/:address_id', async (c) => {
   const user = c.get('user') as User;
   const contactId = Number(c.req.param('contact_id'));
-  const address_id = Number(c.req.param('contact_id'));
+  const address_id = Number(c.req.param('address_id'));
   const request = await c.req.json() as UpdateAddressRequest;
   request.contact_id = contactId;
   request.id = address_id
